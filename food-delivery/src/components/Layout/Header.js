@@ -7,7 +7,7 @@ export default function Header() {
     <>
       <header className={classes.header}>
         <h1>React Meals</h1>
-        <HeaderCartButton>Cart</HeaderCartButton>
+        <HeaderCartButton />
       </header>
       <div className={classes["main-image"]}>
         <img src={mealsImage} alt="A table full of food" />
