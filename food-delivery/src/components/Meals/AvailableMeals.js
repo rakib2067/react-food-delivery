@@ -32,6 +32,7 @@ export default function AvailableMeals(props) {
   const mealList = DUMMY_MEALS.map((meal) => {
     return (
       <MealItem
+        id={meal.id}
         price={meal.price}
         description={meal.description}
         key={meal.id}
