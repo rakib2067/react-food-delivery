@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import cart_context from "../../Context/cart-context";
 import Card from "../UI/Card";
 import classes from "./AvailableMeals.module.css";
 import MealItem from "./MealItem/MealItem";
 export default function AvailableMeals(props) {
+  const cartContext = useContext(cart_context);
   const DUMMY_MEALS = [
     {
       id: "m1",
@@ -32,6 +34,7 @@ export default function AvailableMeals(props) {
   const mealList = DUMMY_MEALS.map((meal) => {
     return (
       <MealItem
+        item={meal}
         id={meal.id}
         price={meal.price}
         description={meal.description}

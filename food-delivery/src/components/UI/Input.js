@@ -4,7 +4,7 @@ export default function Input(props) {
   return (
     <div className={classes.input}>
       <label htmlFor={props.input.id}>{props.label}</label>
-      <input {...props.input} />
+      <input onChange={props.onChange} {...props.input} />
     </div>
   );
 }

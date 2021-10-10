@@ -12,7 +12,7 @@ export default function MealItem(props) {
         <div className={classes.price}>{price}</div>
       </div>
       <div>
-        <MealInput id={props.id} />
+        <MealInput item={props.item} id={props.id} />
       </div>
     </li>
   );
