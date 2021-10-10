@@ -7,6 +7,16 @@ const defaultCartState = {
   totalAmount: 0,
 };
 const cartReducer = (state, action) => {
+  if (action.type === "ADD") {
+    const updatedItems = state.items.concat(action.item);
+    //concat gives a new array instead of editing the existing array in state, so we use this rather than push
+    const updatedTotalAmount =
+      state.totalAmount + action.item.price * action.item.amount;
+    return { items: updatedItems, totalAmount: updatedTotalAmount };
+  }
+  if (action.type === "REMOVE") {
+    const updatedItems = state.items;
+  }
   return { defaultCartState };
 };
 export default function CartProvider(props) {
@@ -14,21 +24,12 @@ export default function CartProvider(props) {
     cartReducer,
     defaultCartState
   );
-  const [items, setItems] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
-  const addItem = (item, amount) => {
-    dispatchCartAction({ type: "ADD" });
-    setItems((previtems) => {
-      return [...previtems, { ...item, amount: amount }];
-    });
+  const addItem = (item) => {
+    dispatchCartAction({ type: "ADD", item: item });
   };
 
   const removeItem = (id) => {
-    setItems((previtems) => {
-      return [...previtems].filter((item) => {
-        return item != id;
-      });
-    });
+    dispatchCartAction({ type: "REMOVE" });
   };
 
   const cartContext = {
