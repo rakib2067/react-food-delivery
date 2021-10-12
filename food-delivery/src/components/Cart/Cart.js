@@ -11,7 +11,7 @@ export default function Cart(props) {
     cartContext.removeItem(id);
   };
   const cartItemAddHandler = (item) => {
-    cartContext.addItem(item);
+    cartContext.addItem({ ...item, amount: 1 });
   };
   const cartItems = (
     <ul className={classes["cart-items"]}>
