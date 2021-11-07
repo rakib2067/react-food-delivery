@@ -11,7 +11,7 @@ export default function AvailableMeals(props) {
   useEffect(() => {
     const fetchMeals = async () => {
       const response = await fetch(
-        "https://react-star-wars-api-fa8db-default-rtdb.europe-west1.firebasedatabase.app/"
+        "https://react-star-wars-api-fa8db-default-rtdb.europe-west1.firebasedatabase.app/meals.json"
       );
       if (!response.ok) {
         throw new Error("Something went wrong!");
