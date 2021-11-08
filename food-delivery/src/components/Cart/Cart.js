@@ -1,9 +1,11 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import cart_context from "../../Context/cart-context";
 import classes from "./Cart.module.css";
 import CartItem from "./CartItem";
+import Checkout from "./Checkout";
 import Modal from "./Modal";
 export default function Cart(props) {
+  const [isOrdering, setIsOrdering] = useState(false);
   const cartContext = useContext(cart_context);
   const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
   const hasItems = cartContext.items.length > 0;
@@ -12,6 +14,9 @@ export default function Cart(props) {
   };
   const cartItemAddHandler = (item) => {
     cartContext.addItem({ ...item, amount: 1 });
+  };
+  const handleOrder = (event) => {
+    setIsOrdering(true);
   };
   const cartItems = (
     <ul className={classes["cart-items"]}>
@@ -29,6 +34,34 @@ export default function Cart(props) {
       })}
     </ul>
   );
+  const modalActions = (
+    <div className={classes.actions}>
+      <button onClick={props.closeCart} className={classes["button--alt"]}>
+        Close
+      </button>
+      {hasItems && (
+        <button className={classes.button} onClick={handleOrder}>
+          Order
+        </button>
+      )}
+    </div>
+  );
+
+  const cancelOrder = () => {
+    setIsOrdering(false);
+  };
+  const submitOrderHandler = (userData) => {
+    fetch(
+      "https://react-star-wars-api-fa8db-default-rtdb.europe-west1.firebasedatabase.app/orders.json",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          user: userData,
+          orderedItems: cartContext.items,
+        }),
+      }
+    );
+  };
   return (
     <Modal>
       {cartItems}
@@ -36,12 +69,10 @@ export default function Cart(props) {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      <div className={classes.actions}>
-        <button onClick={props.closeCart} className={classes["button--alt"]}>
-          Close
-        </button>
-        {hasItems && <button className={classes.button}>Order</button>}
-      </div>
+      {isOrdering && (
+        <Checkout onConfirm={submitOrderHandler} onClose={cancelOrder} />
+      )}
+      {!isOrdering && modalActions}
     </Modal>
   );
 }
