@@ -6,6 +6,8 @@ import Checkout from "./Checkout";
 import Modal from "./Modal";
 export default function Cart(props) {
   const [isOrdering, setIsOrdering] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
   const cartContext = useContext(cart_context);
   const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
   const hasItems = cartContext.items.length > 0;
@@ -50,8 +52,9 @@ export default function Cart(props) {
   const cancelOrder = () => {
     setIsOrdering(false);
   };
-  const submitOrderHandler = (userData) => {
-    fetch(
+  const submitOrderHandler = async (userData) => {
+    setIsSubmitting(true);
+    await fetch(
       "https://react-star-wars-api-fa8db-default-rtdb.europe-west1.firebasedatabase.app/orders.json",
       {
         method: "POST",
@@ -61,9 +64,13 @@ export default function Cart(props) {
         }),
       }
     );
+    setIsSubmitting(false);
+    setDidSubmit(true);
+    cartContext.reset();
   };
-  return (
-    <Modal>
+
+  const cartModalContent = (
+    <>
       {cartItems}
       <div className={classes.total}>
         <span>Total Amount</span>
@@ -73,6 +80,25 @@ export default function Cart(props) {
         <Checkout onConfirm={submitOrderHandler} onClose={cancelOrder} />
       )}
       {!isOrdering && modalActions}
+    </>
+  );
+  const isSubmittingModalContent = <p>Sending order data...</p>;
+
+  const didSubmitModalContent = (
+    <>
+      <p>Order Success!</p>
+      <div className={classes.actions}>
+        <button onClick={props.closeCart} className={classes["button--alt"]}>
+          Close
+        </button>
+      </div>
+    </>
+  );
+  return (
+    <Modal>
+      {!isSubmitting && !didSubmit && cartModalContent}
+      {isSubmitting && isSubmittingModalContent}
+      {didSubmit && didSubmitModalContent}
     </Modal>
   );
 }
